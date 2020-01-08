@@ -22,16 +22,20 @@ const Controller = ({
 }: ControllerProps) => {
   const methods = useFormContext() || {};
   const {
-    defaultValues,
+    defaultValues = {},
     fields,
-    setValue,
+    setValue = () => null,
     register,
     unregister,
     errors,
-    mode: { isOnSubmit, isOnBlur },
-    reValidateMode: { isReValidateOnBlur, isReValidateOnSubmit },
-    formState: { isSubmitted },
-  } = control || methods.control;
+    mode = {},
+    reValidateMode = {},
+    formState = {},
+  } = control || methods.control || {};
+  const { isOnSubmit, isOnBlur } = mode;
+  const { isReValidateOnBlur, isReValidateOnSubmit } = reValidateMode;
+  const { isSubmitted } = formState;
+
   const [value, setInputStateValue] = React.useState(
     isUndefined(defaultValue) ? defaultValues[name] : defaultValue,
   );
@@ -94,12 +98,12 @@ const Controller = ({
       { ...rules },
     );
 
-  if (!fields[name]) {
+  if (fields && !fields[name]) {
     registerField();
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => () => unregister(name), [name]);
+  React.useEffect(() => () => unregister && unregister(name), [name]);
 
   const props = {
     name,

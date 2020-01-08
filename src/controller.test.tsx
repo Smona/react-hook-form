@@ -172,4 +172,17 @@ describe('React Hook Form Input', () => {
 
     expect(asFragment()).toMatchSnapshot();
   });
+
+  it("should simply pass along props if control isn't provided", () => {
+    const { asFragment } = render(
+      <Controller
+        name="test"
+        as="input"
+        valueName="myValue"
+        defaultValue="hello"
+      />,
+    );
+
+    expect(asFragment()).toMatchSnapshot();
+  });
 });
